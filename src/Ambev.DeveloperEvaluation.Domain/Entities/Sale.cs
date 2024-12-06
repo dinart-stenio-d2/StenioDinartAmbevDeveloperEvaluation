@@ -5,7 +5,6 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
     public class Sale : BaseEntity, IAggregateRoot
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
         public string SaleNumber { get; set; }
         public DateTime SaleDate { get; set; }
         public string Customer { get; set; }

@@ -16,5 +16,24 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             var subtotal = UnitPrice * Quantity;
             return subtotal - (subtotal * Discount / 100);
         }
+
+        /// <summary>
+        /// Applies the discount based on the quantity
+        /// </summary>
+        public void ApplyDiscount()
+        {
+            if (Quantity < 4)
+            {
+                Discount = 0;
+            }
+            else if (Quantity >= 4 && Quantity < 10)
+            {
+                Discount = 10;
+            }
+            else if (Quantity >= 10 && Quantity <= 20)
+            {
+                Discount = 20;
+            }
+        }
     }
 }

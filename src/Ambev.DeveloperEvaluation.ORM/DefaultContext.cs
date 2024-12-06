@@ -27,14 +27,17 @@ public class DefaultContext : DbContext
             .ValueGeneratedNever();
 
             entity.Property(s => s.SaleNumber)
-                .HasMaxLength(50); 
+                .HasMaxLength(10); 
 
             entity.Property(s => s.SaleDate)
                 .IsRequired(); 
 
             entity.Property(s => s.Customer)
                 .IsRequired()
-                .HasMaxLength(100); 
+                .HasMaxLength(50);
+
+            entity.Property(s => s.Branch)
+               .HasMaxLength(50);
 
             entity.Property(s => s.TotalAmount)
                 .IsRequired()

@@ -1,9 +1,10 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+using FluentValidation.Results;
 
 namespace Ambev.DeveloperEvaluation.Domain.Services.Interfaces
 {
     public interface ISaleService
     {
-        void ApplySalesDiscountRules(Sale sale);
+        public ValidationResult ValidateSale(Sale sale);
     }
 }

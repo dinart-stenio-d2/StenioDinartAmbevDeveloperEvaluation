@@ -8,6 +8,7 @@ using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace Ambev.DeveloperEvaluation.WebApi;
@@ -33,8 +34,10 @@ public class Program
                 options.UseNpgsql(
                     builder.Configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.ORM")
-                )
-            );
+                ));
+
+           
+
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
 

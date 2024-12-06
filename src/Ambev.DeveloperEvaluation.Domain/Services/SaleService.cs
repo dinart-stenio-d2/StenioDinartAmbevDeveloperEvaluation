@@ -1,33 +1,51 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Services.Interfaces;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
 
 namespace Ambev.DeveloperEvaluation.Domain.Services
 {
     public class SaleService : ISaleService
     {
-        public void ApplySalesDiscountRules(Sale sale)
+        private readonly IValidator<Sale> _saleValidator;
+        private readonly ILogger<SaleService> _logger;
+
+        public SaleService(IValidator<Sale> saleValidator, ILogger<SaleService> logger)
         {
-            foreach (var item in sale.Items)
+            _saleValidator = saleValidator;
+            _logger = logger;
+        }
+
+        public ValidationResult ValidateSale(Sale sale)
+        {
+            _logger.LogInformation("Starting validation for Sale with ID: {SaleId}", sale.Id);
+
+            var validationResult = _saleValidator.Validate(sale);
+
+            if (!validationResult.IsValid)
             {
-                if (item.Quantity < 4)
-                {
-                    item.Discount = 0;
-                }
-                else if (item.Quantity >= 4 && item.Quantity < 10)
-                {
-                    item.Discount = 10;
-                }
-                else if (item.Quantity >= 10 && item.Quantity <= 20)
-                {
-                    item.Discount = 20;
-                }
-                else
-                {
-                    //TODO : Apply fluent validations rules here 
-                    throw new InvalidOperationException("Cannot sell more than 20 items of the same product.");
-                }
+                _logger.LogWarning("Validation failed for Sale with ID: {SaleId}. Errors: {Errors}",
+                    sale.Id, string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage)));
+
+                return validationResult;
             }
-            sale.CalculateTotalAmount();
+
+            _logger.LogInformation("Validation succeeded for Sale with ID: {SaleId}. Applying discounts and calculating total amount.", sale.Id);
+
+            try
+            {
+                sale.ApplyDiscounts();
+                sale.CalculateTotalAmount();
+                _logger.LogInformation("Successfully applied discounts and calculated total amount for Sale with ID: {SaleId}", sale.Id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while applying discounts or calculating total amount for Sale with ID: {SaleId}", sale.Id);
+                throw;
+            }
+
+            return validationResult;
         }
     }
 }

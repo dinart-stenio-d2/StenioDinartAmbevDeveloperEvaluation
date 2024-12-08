@@ -8,7 +8,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Services.Interfaces
         Task<IEnumerable<T>> GetAllAsync();
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);
-        Task DeleteAsync(Guid id);
+        Task<bool>DeleteAsync(Guid id);
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
     }
 }

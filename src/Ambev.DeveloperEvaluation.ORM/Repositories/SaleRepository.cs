@@ -84,21 +84,32 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             }
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             _logger.LogInformation("Deleting sale with ID {Id} from the repository.", id);
+
             try
             {
-                await _repository.DeleteAsync(id);
-                _logger.LogInformation("Successfully deleted sale with ID {Id}.", id);
+                var isDeleted = await _repository.DeleteAsync(id);
+
+                if (isDeleted)
+                {
+                    _logger.LogInformation("Successfully deleted sale with ID {Id}.", id);
+                    return true; 
+                }
+                else
+                {
+                    _logger.LogWarning("Sale with ID {Id} not found. Deletion skipped.", id);
+                    return false; 
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting the sale with ID {Id}.", id);
-                throw;
+                throw; 
             }
         }
-
+        
         public async Task<IEnumerable<Sale>> FindAsync(System.Linq.Expressions.Expression<Func<Sale, bool>> predicate)
         {
             _logger.LogInformation("Searching sales using a predicate.");
@@ -114,6 +125,8 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
                 throw;
             }
         }
+
+       
     }
 
 }

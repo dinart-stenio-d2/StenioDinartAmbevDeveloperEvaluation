@@ -103,7 +103,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories.Generic
             }
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             _logger.LogInformation("Deleting entity with ID {Id} from the database.", id);
             try
@@ -115,20 +115,23 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories.Generic
                     if (entity == null)
                     {
                         _logger.LogWarning("Entity with ID {Id} not found. Deletion skipped.", id);
-                        return;
+                        return false; // Return false if the entity was not found
                     }
 
                     dbContext.Set<T>().Remove(entity);
                     await dbContext.SaveChangesAsync();
+
                     _logger.LogInformation("Entity with ID {Id} deleted successfully.", id);
+                    return true; // Return true if the deletion was successful
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting the entity with ID {Id}.", id);
-                throw;
+                return false; // Return false if an exception occurred
             }
         }
+        
 
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {

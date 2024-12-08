@@ -27,6 +27,15 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         }
 
         /// <summary>
+        /// Update the Sales Status  
+        /// </summary>
+        /// <param name="salesStatus"></param>
+        public void UpdateSaleStatus(bool salesStatus)
+        {
+            IsCancelled = salesStatus;
+        }
+
+        /// <summary>
         /// Calculate the TotalAmount to all items in the sale
         /// </summary>
         public void CalculateTotalAmount()

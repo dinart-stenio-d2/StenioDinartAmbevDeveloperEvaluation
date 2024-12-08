@@ -12,6 +12,7 @@ public class GetUserHandler : IRequestHandler<GetUserCommand, GetUserResult>
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
+ 
 
     /// <summary>
     /// Initializes a new instance of GetUserHandler

@@ -18,7 +18,8 @@ namespace Ambev.DeveloperEvaluation.Domain.Validation
             });
 
             RuleFor(sale => sale.Id)
-                .NotEmpty().WithMessage("Sale ID is required.");
+                  .NotEmpty().WithMessage("Sale ID is required.")
+                  .Must(id => id != Guid.Empty).WithMessage("Sale ID cannot be the default GUID.");
 
             RuleFor(sale => sale.SaleNumber)
                 .NotEmpty().WithMessage("Sale number is required.")
@@ -37,6 +38,10 @@ namespace Ambev.DeveloperEvaluation.Domain.Validation
 
             RuleFor(sale => sale.IsCancelled)
                 .NotNull().WithMessage("IsCancelled field is required.");
+            
+            RuleFor(sale => sale.Items)
+            .NotEmpty().WithMessage("A sale must have at least one item.");
+
 
             RuleForEach(sale => sale.Items).SetValidator(new SaleItemValidator());
 

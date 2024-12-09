@@ -1,4 +1,6 @@
-﻿namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSales
+﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+
+namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSales
 {
     public class CreateSaleResult
     {
@@ -21,5 +23,12 @@
         /// Gets or sets the status of whether the sale is cancelled.
         /// </summary>
         public bool IsCancelled { get; set; }
+
+        public DateTime SaleDate { get; set; }
+        public string Customer { get; set; }
+        public string Branch { get; set; }
+       
+        public List<SaleItemDto> Items { get; set; } = new List<SaleItemDto>();
+
     }
 }

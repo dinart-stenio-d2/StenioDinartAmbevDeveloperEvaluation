@@ -57,5 +57,13 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
                 item.ApplyDiscount();
             }
         }
+
+        /// <summary>
+        /// Regenerates the ID for the SaleItem.
+        /// </summary>
+        public void RegenerateId()
+        {
+            GenerateNewId();
+        }
     }
 }

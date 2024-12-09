@@ -44,24 +44,5 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSales
         /// </summary>
         public List<UpdateSaleItemDto> Items { get; set; } = new List<UpdateSaleItemDto>();
 
-        
-        /// <summary>
-        /// Validates the current UpdateSaleCommand instance.
-        /// </summary>
-        /// <returns>A ValidationResultDetail object containing validation results.</returns>
-        //public ValidationResultDetail Validate()
-        //{
-        //    var validator = new UpdateSaleCommandValidator();
-        //    var result = validator.Validate(this);
-        //    return new ValidationResultDetail
-        //    {
-        //        IsValid = result.IsValid,
-        //        Errors = result.Errors.Select(e => new ValidationErrorDetail
-        //        {
-        //            PropertyName = e.PropertyName,
-        //            ErrorMessage = e.ErrorMessage
-        //        })
-        //    };
-        //}
     }
 }

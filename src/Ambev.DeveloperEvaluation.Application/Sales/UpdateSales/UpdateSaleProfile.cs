@@ -7,20 +7,12 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSales
     {
         public UpdateSaleProfile()
         {
-
             CreateMap<UpdateSaleCommand, Sale>()
-               .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items))
-               .ForMember(dest => dest.TotalAmount, opt => opt.Ignore()) 
-               .ForMember(dest => dest.IsCancelled, opt => opt.MapFrom(src => src.IsCancelled))
-               .ForMember(dest => dest.SaleNumber, opt => opt.MapFrom(src => src.SaleNumber));
+           .ForMember(dest => dest.TotalAmount, opt => opt.Ignore()); // TotalAmount será calculado separadamente
+            CreateMap<UpdateSaleItemDto, SaleItem>().ReverseMap();
 
+            CreateMap<Sale, UpdateSaleResult>().ReverseMap();
 
-            CreateMap<UpdateSaleItemDto, SaleItem>();
-
-            CreateMap<Sale, UpdateSaleResult>()
-                .ForMember(dest => dest.SaleNumber, opt => opt.MapFrom(src => src.SaleNumber))
-                .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
-                .ForMember(dest => dest.IsCancelled, opt => opt.MapFrom(src => src.IsCancelled));
         }
     }
 }

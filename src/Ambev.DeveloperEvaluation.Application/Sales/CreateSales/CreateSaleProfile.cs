@@ -7,24 +7,16 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSales
     {
         public CreateSaleProfile()
         {
-
-            //CreateMap<CreateSaleCommand, Sale>()
-            //    .ForMember(dest => dest.TotalAmount, opt => opt.Ignore()); // TotalAmount será calculado
-
-            //CreateMap<SaleItemDto, SaleItem>();
-
-            //CreateMap<Sale, CreateSaleResult>();
-
+         
             CreateMap<SaleItemDto, SaleItem>();
 
             CreateMap<CreateSaleCommand, Sale>()
-                .ForMember(dest => dest.TotalAmount, opt => opt.Ignore()); // TotalAmount será calculado
+                .ForMember(dest => dest.TotalAmount, opt => opt.Ignore()); 
 
-            // Mapear Sale para CreateSaleResult
+
             CreateMap<Sale, CreateSaleResult>()
-                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items)); // Mapear a lista de Items
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items)); 
 
-            // Mapear SaleItem para SaleItemDto
             CreateMap<SaleItem, SaleItemDto>();
         }
     }

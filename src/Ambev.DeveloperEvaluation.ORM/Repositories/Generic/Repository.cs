@@ -23,7 +23,20 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories.Generic
             {
                 _logger.BeginScope("Method: GetByIdAsync");
 
-                var entity = await _context.Set<T>().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
+               
+                IQueryable<T> query = _context.Set<T>();
+
+                
+                var entityType = _context.Model.FindEntityType(typeof(T));
+                if (entityType != null)
+                {
+                    foreach (var navigation in entityType.GetNavigations())
+                    {
+                        query = query.Include(navigation.Name);
+                    }
+                }
+
+                var entity = await query.FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
 
                 if (entity == null)
                 {
@@ -43,25 +56,36 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories.Generic
             }
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
         {
-            _logger.LogInformation("Retrieving all entities from the database.");
+            _logger.LogInformation("Retrieving all entities with related data from the database.");
             try
             {
                 using (_logger.BeginScope("Method: GetAllAsync"))
                 {
-                    using var dbContext = _context;
-                    var entities = await dbContext.Set<T>().ToListAsync();
+                    IQueryable<T> query = _context.Set<T>();
+
+                   
+                    if (includes != null)
+                    {
+                        foreach (var include in includes)
+                        {
+                            query = query.Include(include);
+                        }
+                    }
+
+                    var entities = await query.ToListAsync();
                     _logger.LogInformation("Successfully retrieved {Count} entities.", entities.Count);
                     return entities;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while retrieving all entities.");
+                _logger.LogError(ex, "An error occurred while retrieving entities.");
                 throw;
             }
         }
+
 
         public async Task AddAsync(T entity)
         {

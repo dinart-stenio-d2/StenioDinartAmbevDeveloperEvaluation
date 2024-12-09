@@ -50,8 +50,6 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSales
                     throw new ValidationException(saleValidationResult.Errors);
                 }
 
-                //sale.UpdateSaleStatus(false);
-
                 await _saleRepository.AddAsync(sale);
 
                 _logger.LogInformation("Sale successfully created with SaleNumber: {SaleNumber}", sale.SaleNumber);

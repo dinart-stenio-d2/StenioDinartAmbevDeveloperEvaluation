@@ -2,7 +2,7 @@
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
-    public class SaleItem :BaseEntity
+    public class SaleItem : BaseEntity
     {
         public Guid SaleId { get; set; } 
         public string Product { get; set; }
@@ -34,6 +34,14 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             {
                 Discount = 20;
             }
+        }
+
+        /// <summary>
+        /// Regenerates the ID for the SaleItem.
+        /// </summary>
+        public void RegenerateId()
+        {
+            GenerateNewId();
         }
     }
 }

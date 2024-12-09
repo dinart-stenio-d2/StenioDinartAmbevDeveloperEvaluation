@@ -8,19 +8,24 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSales
         public CreateSaleProfile()
         {
 
-            CreateMap<CreateSaleCommand, Sale>()
-                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items))
-                .ForMember(dest => dest.TotalAmount, opt => opt.Ignore()) // TotalAmount será calculado
-                .ForMember(dest => dest.IsCancelled, opt => opt.MapFrom(src => src.IsCancelled))
-                .ForMember(dest => dest.SaleNumber, opt => opt.MapFrom(src => src.SaleNumber));
+            //CreateMap<CreateSaleCommand, Sale>()
+            //    .ForMember(dest => dest.TotalAmount, opt => opt.Ignore()); // TotalAmount será calculado
 
-        
+            //CreateMap<SaleItemDto, SaleItem>();
+
+            //CreateMap<Sale, CreateSaleResult>();
+
             CreateMap<SaleItemDto, SaleItem>();
 
+            CreateMap<CreateSaleCommand, Sale>()
+                .ForMember(dest => dest.TotalAmount, opt => opt.Ignore()); // TotalAmount será calculado
+
+            // Mapear Sale para CreateSaleResult
             CreateMap<Sale, CreateSaleResult>()
-                .ForMember(dest => dest.SaleNumber, opt => opt.MapFrom(src => src.SaleNumber))
-                .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
-                .ForMember(dest => dest.IsCancelled, opt => opt.MapFrom(src => src.IsCancelled));
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items)); // Mapear a lista de Items
+
+            // Mapear SaleItem para SaleItemDto
+            CreateMap<SaleItem, SaleItemDto>();
         }
     }
 }

@@ -7,10 +7,10 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories.Generic
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly DbContext _context;
+        private readonly DefaultContext _context;
         private readonly ILogger<Repository<T>> _logger;
 
-        public Repository(DbContext context, ILogger<Repository<T>> logger)
+        public Repository(DefaultContext context, ILogger<Repository<T>> logger)
         {
             _context = context;
             _logger = logger;

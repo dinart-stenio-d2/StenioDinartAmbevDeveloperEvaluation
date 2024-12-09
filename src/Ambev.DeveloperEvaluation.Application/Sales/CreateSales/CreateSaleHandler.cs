@@ -32,28 +32,40 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSales
 
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
-
-
-            var sale = _mapper.Map<Sale>(command);
-            sale.GenerateSaleNumber();
-
-
-            var saleValidationResult = _saleService.ValidateSale(sale);
-            if (!saleValidationResult.IsValid)
+            try
             {
-                _logger.LogWarning("Validation failed for SaleNumber: {SaleNumber}", command.SaleNumber);
-                throw new ValidationException(saleValidationResult.Errors);
+                var sale = _mapper.Map<Sale>(command);
+
+                sale.GenerateSaleNumber();
+                sale.RegenerateId();
+                foreach (var item in sale.Items)
+                {
+                    item.RegenerateId();
+                }
+
+                var saleValidationResult = _saleService.ValidateSale(sale);
+                if (!saleValidationResult.IsValid)
+                {
+                    _logger.LogWarning("Validation failed for SaleNumber: {SaleNumber}", command.SaleNumber);
+                    throw new ValidationException(saleValidationResult.Errors);
+                }
+
+                //sale.UpdateSaleStatus(false);
+
+                await _saleRepository.AddAsync(sale);
+
+                _logger.LogInformation("Sale successfully created with SaleNumber: {SaleNumber}", sale.SaleNumber);
+
+                var result = _mapper.Map<CreateSaleResult>(sale);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new ValidationException(ex.Message);
             }
 
-            sale.UpdateSaleStatus(false);
-
-            await _saleRepository.AddAsync(sale);
-
-            _logger.LogInformation("Sale successfully created with SaleNumber: {SaleNumber}", sale.SaleNumber);
-
-            var result = _mapper.Map<CreateSaleResult>(sale);
-
-            return result;
+           
         }
     }
 }

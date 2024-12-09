@@ -20,4 +20,12 @@ public class BaseEntity : IComparable<BaseEntity>
 
         return other!.Id.CompareTo(Id);
     }
+
+    /// <summary>
+    /// Generates a new GUID for the entity.
+    /// </summary>
+    public void GenerateNewId()
+    {
+        Id = Guid.NewGuid();
+    }
 }

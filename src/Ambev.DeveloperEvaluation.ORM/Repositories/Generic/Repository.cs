@@ -21,20 +21,20 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories.Generic
             _logger.LogInformation("Retrieving entity with ID {Id} from the database.", id);
             try
             {
-                using (_logger.BeginScope("Method: GetByIdAsync"))
+                _logger.BeginScope("Method: GetByIdAsync");
+
+                var entity = await _context.Set<T>().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
+
+                if (entity == null)
                 {
-                    using var dbContext = _context;
-                    var entity = await dbContext.Set<T>().FindAsync(id);
-                    if (entity == null)
-                    {
-                        _logger.LogWarning("Entity with ID {Id} not found.", id);
-                    }
-                    else
-                    {
-                        _logger.LogInformation("Entity with ID {Id} retrieved successfully.", id);
-                    }
-                    return entity;
+                    _logger.LogWarning("Entity with ID {Id} not found.", id);
                 }
+                else
+                {
+                    _logger.LogInformation("Entity with ID {Id} retrieved successfully.", id);
+                }
+
+                return entity;
             }
             catch (Exception ex)
             {
@@ -82,16 +82,28 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories.Generic
                 throw;
             }
         }
-
         public async Task UpdateAsync(T entity)
         {
             _logger.LogInformation("Updating an entity in the database: {Entity}.", entity);
+
             try
             {
                 using (_logger.BeginScope("Method: UpdateAsync"))
                 {
                     using var dbContext = _context;
-                    dbContext.Set<T>().Update(entity);
+
+                    // Detach any existing tracked entity with the same key
+                    var existingEntity = dbContext.Set<T>().Local.FirstOrDefault(e => ((dynamic)e).Id == ((dynamic)entity).Id);
+                    if (existingEntity != null)
+                    {
+                        dbContext.Entry(existingEntity).State = EntityState.Detached;
+                    }
+
+                    // Attach the updated entity and mark it as modified
+                    dbContext.Attach(entity);
+                    dbContext.Entry(entity).State = EntityState.Modified;
+
+                    // Save changes
                     await dbContext.SaveChangesAsync();
                     _logger.LogInformation("Entity updated successfully.");
                 }

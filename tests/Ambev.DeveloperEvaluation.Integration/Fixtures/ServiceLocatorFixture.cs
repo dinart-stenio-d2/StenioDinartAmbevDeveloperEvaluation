@@ -8,6 +8,7 @@ using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.ORM.Repositories.Generic;
 using Ambev.DeveloperEvaluation.WebApi;
 using AutoMapper;
+using FluentAssertions.Common;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -32,8 +33,14 @@ namespace Ambev.DeveloperEvaluation.Integration.Fixtures
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
+       
+           
+            // Register DbContext with scoped lifetime (default)
             serviceCollection.AddDbContext<DefaultContext>(options =>
-                    options.UseNpgsql(connectionString));
+                options.UseNpgsql(connectionString),
+                ServiceLifetime.Scoped // This is optional as scoped is the default.
+            );
+
 
 
             // Register repositories and services

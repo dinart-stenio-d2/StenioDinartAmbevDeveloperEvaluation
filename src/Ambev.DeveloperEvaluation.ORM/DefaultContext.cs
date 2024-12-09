@@ -2,18 +2,22 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Reflection;
 
 namespace Ambev.DeveloperEvaluation.ORM;
 
 public class DefaultContext : DbContext
 {
+    private readonly ILogger<DefaultContext> _logger;
     public DbSet<User> Users { get; set; }
     public DbSet<Sale> Sales { get; set; }
     public DbSet<SaleItem> SaleItems { get; set; }
 
-    public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
+    public DefaultContext(DbContextOptions<DefaultContext> options, ILogger<DefaultContext> logger) : base(options)
     {
+        _logger = logger;
+        _logger.LogInformation("DefaultContext instance created.");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -84,6 +88,12 @@ public class DefaultContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
     }
+    public override void Dispose()
+    {
+        _logger.LogInformation("DefaultContext instance disposed.");
+        base.Dispose();
+    }
+
 }
 public class YourDbContextFactory : IDesignTimeDbContextFactory<DefaultContext>
 {
@@ -106,8 +116,11 @@ public class YourDbContextFactory : IDesignTimeDbContextFactory<DefaultContext>
                 connectionString,
                 b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.ORM"));
 
+        // fake logger
+        var loggerFactory = LoggerFactory.Create(builder => builder.AddDebug());
+        var logger = loggerFactory.CreateLogger<DefaultContext>();
 
-
-        return new DefaultContext(builder.Options);
+        return new DefaultContext(builder.Options, logger);
     }
+
 }

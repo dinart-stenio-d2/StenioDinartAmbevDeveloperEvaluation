@@ -14,6 +14,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
 
 namespace Ambev.DeveloperEvaluation.Integration.Fixtures
 {
@@ -56,8 +57,35 @@ namespace Ambev.DeveloperEvaluation.Integration.Fixtures
             serviceCollection.AddScoped<IRequestHandler<DeleteSaleCommand, DeleteSaleResponse>, DeleteSaleHandler>();
 
 
+            /// Register AutoMapper with assemblies
+            serviceCollection.AddAutoMapper(cfg =>
+            {
+                cfg.AddMaps(typeof(Program).Assembly, typeof(ApplicationLayer).Assembly); // Register profiles
+            });
+
+          
+
             // Register AutoMapper
-            serviceCollection.AddAutoMapper(typeof(Program).Assembly, typeof(ApplicationLayer).Assembly);
+            //serviceCollection.ad(cfg =>
+            //{
+            //    // Add mappings from assemblies
+            //    cfg.AddMaps(typeof(Program).Assembly, typeof(ApplicationLayer).Assembly);
+
+            //    // Globally ignore unmapped properties
+            //    cfg.ForAllMaps((typeMap, mapConfig) =>
+            //    {
+            //        foreach (var unmappedProperty in typeMap.GetUnmappedPropertyNames())
+            //        {
+            //            mapConfig.ForMember(unmappedProperty, opt => opt.Ignore());
+            //        }
+            //    });
+            //});
+
+            // Validate AutoMapper configuration
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            var mapperConfiguration = serviceProvider.GetRequiredService<IMapper>().ConfigurationProvider;
+            mapperConfiguration.AssertConfigurationIsValid();
+
 
             // Register MediatR handlers
             serviceCollection.AddMediatR(cfg =>

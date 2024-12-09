@@ -1,15 +1,13 @@
-﻿using Ambev.DeveloperEvaluation.Application.Users.CreateUser;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSales
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale
 {
-    internal class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
+    public class CreateSaleRequestValidator :  AbstractValidator<CreateSaleRequest>
     {
-        public CreateSaleCommandValidator()
+        public CreateSaleRequestValidator()
         {
-
             RuleFor(sale => sale.SaleDate)
-                .NotEmpty().WithMessage("SaleDate is required.");
+             .NotEmpty().WithMessage("SaleDate is required.");
 
             RuleFor(sale => sale.Customer)
                 .NotEmpty().WithMessage("Customer is required.")
@@ -27,7 +25,15 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSales
                 items.RuleFor(item => item.Product)
                     .NotEmpty().WithMessage("Product is required.")
                     .MaximumLength(100).WithMessage("Product cannot exceed 100 characters.");
+
+                items.RuleFor(item => item.Quantity)
+                    .GreaterThan(0).WithMessage("Quantity must be greater than 0.");
+
+                items.RuleFor(item => item.UnitPrice)
+                     .GreaterThan(0).WithMessage("UnitPrice must be greater than 0.")
+                     .PrecisionScale(18, 2, true).WithMessage("UnitPrice must have up to 18 digits in total and 2 decimal places.");
             });
         }
+
     }
 }

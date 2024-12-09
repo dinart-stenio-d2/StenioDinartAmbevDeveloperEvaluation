@@ -1,6 +1,8 @@
-﻿namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSales
+﻿using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
+
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale
 {
-    public class CreateSaleResult
+    public class GetSaleResponse
     {
         /// <summary>
         /// Gets or sets the unique identifier of the newly created sale.
@@ -25,8 +27,7 @@
         public DateTime SaleDate { get; set; }
         public string Customer { get; set; }
         public string Branch { get; set; }
-       
-        public List<SaleItemDto> Items { get; set; } = new List<SaleItemDto>();
 
+        public List<GetSaleSaleItemDtoResponse> Items { get; set; } = new List<GetSaleSaleItemDtoResponse>();
     }
 }

@@ -23,8 +23,10 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetAllSales
         {
             _logger.LogInformation("Fetching all sales");
 
-            var sales = await _saleRepository.GetAllAsync();
-
+            var sales = await _saleRepository.GetAllAsync(
+                sale => sale.Items 
+            );
+           
             if (!sales.Any())
             {
                 _logger.LogWarning("No sales records found");

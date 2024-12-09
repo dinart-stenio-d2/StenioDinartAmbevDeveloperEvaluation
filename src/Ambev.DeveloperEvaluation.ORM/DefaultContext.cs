@@ -49,7 +49,15 @@ public class DefaultContext : DbContext
 
             entity.Property(s => s.IsCancelled)
                 .IsRequired();
+ 
         });
+
+
+        modelBuilder.Entity<Sale>()
+        .HasMany(s => s.Items)
+        .WithOne(i => i.Sale)
+        .HasForeignKey(i => i.SaleId)
+        .OnDelete(DeleteBehavior.Cascade);
 
 
         modelBuilder.Entity<SaleItem>(entity =>
@@ -78,13 +86,14 @@ public class DefaultContext : DbContext
                 .IsRequired()
                 .HasColumnType("decimal(18,2)"); 
 
-            entity.HasOne(si => si.Sale)
-                .WithMany(s => s.Items)
-                .HasForeignKey(si => si.SaleId)
-                .OnDelete(DeleteBehavior.Cascade); 
         });
 
-    
+        modelBuilder.Entity<SaleItem>()
+       .HasOne(i => i.Sale) 
+       .WithMany(s => s.Items) 
+       .HasForeignKey(i => i.SaleId); 
+
+
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
     }

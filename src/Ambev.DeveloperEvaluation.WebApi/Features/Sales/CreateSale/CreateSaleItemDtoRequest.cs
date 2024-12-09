@@ -1,6 +1,6 @@
-﻿namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale
+﻿namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale
 {
-    public class GetSaleItemDto
+    public class CreateSaleItemDtoRequest
     {
         public string Product { get; set; } = string.Empty;
         public int Quantity { get; set; }

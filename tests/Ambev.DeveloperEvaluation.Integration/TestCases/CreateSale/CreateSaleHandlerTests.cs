@@ -1,15 +1,8 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Sales.CreateSales;
-using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Integration.Fixtures;
-using Bogus;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Ambev.DeveloperEvaluation.Integration.TestCases.CreateSale

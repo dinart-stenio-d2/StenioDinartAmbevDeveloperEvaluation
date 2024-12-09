@@ -63,28 +63,10 @@ namespace Ambev.DeveloperEvaluation.Integration.Fixtures
                 cfg.AddMaps(typeof(Program).Assembly, typeof(ApplicationLayer).Assembly); // Register profiles
             });
 
-          
-
-            // Register AutoMapper
-            //serviceCollection.ad(cfg =>
-            //{
-            //    // Add mappings from assemblies
-            //    cfg.AddMaps(typeof(Program).Assembly, typeof(ApplicationLayer).Assembly);
-
-            //    // Globally ignore unmapped properties
-            //    cfg.ForAllMaps((typeMap, mapConfig) =>
-            //    {
-            //        foreach (var unmappedProperty in typeMap.GetUnmappedPropertyNames())
-            //        {
-            //            mapConfig.ForMember(unmappedProperty, opt => opt.Ignore());
-            //        }
-            //    });
-            //});
-
-            // Validate AutoMapper configuration
-            var serviceProvider = serviceCollection.BuildServiceProvider();
-            var mapperConfiguration = serviceProvider.GetRequiredService<IMapper>().ConfigurationProvider;
-            mapperConfiguration.AssertConfigurationIsValid();
+            // Validate AutoMapper configuration uncomment to validate the AutoMapper mappings 
+            //var serviceProvider = serviceCollection.BuildServiceProvider();
+            //var mapperConfiguration = serviceProvider.GetRequiredService<IMapper>().ConfigurationProvider;
+            //mapperConfiguration.AssertConfigurationIsValid();
 
 
             // Register MediatR handlers
@@ -101,21 +83,6 @@ namespace Ambev.DeveloperEvaluation.Integration.Fixtures
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
            
-            // Validate AutoMapper configuration
-            //using (var scope = ServiceProvider.CreateScope())
-            //{
-            //    var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
-            //    try
-            //    {
-            //        mapper.ConfigurationProvider.AssertConfigurationIsValid();
-            //        Console.WriteLine("AutoMapper configuration is valid.");
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine($"AutoMapper configuration error: {ex.Message}");
-            //        throw; // Re-throw the exception to prevent further execution
-            //    }
-            //}
         }
 
         public void Dispose()

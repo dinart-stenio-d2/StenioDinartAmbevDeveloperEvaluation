@@ -33,8 +33,8 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetAllSales
 
             var result = _mapper.Map<IEnumerable<GetAllSaleResult>>(sales);
             _logger.LogInformation("Successfully retrieved {Count} sales", sales.Count());
-
             return result;
+            
         }
     }
 }

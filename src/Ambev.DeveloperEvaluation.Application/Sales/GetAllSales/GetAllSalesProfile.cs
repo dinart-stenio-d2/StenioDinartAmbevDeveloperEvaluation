@@ -12,7 +12,11 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetAllSales
     {
         public GetAllSalesProfile()
         {
-            CreateMap<List<Sale>, GetAllSalesResult>()
+        
+            CreateMap<Sale, GetAllSaleResult>();
+
+         
+            CreateMap<IEnumerable<Sale>, GetAllSalesResult>()
                 .ForMember(dest => dest.Sales, opt => opt.MapFrom(src => src));
         }
         

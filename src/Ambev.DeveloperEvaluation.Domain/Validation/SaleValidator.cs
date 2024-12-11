@@ -10,6 +10,12 @@ namespace Ambev.DeveloperEvaluation.Domain.Validation
         {
             RuleForEach(sale => sale.Items).ChildRules(items =>
             {
+                items.RuleFor(item => item.Product)
+                     .NotEmpty().WithMessage("Product name is required.");
+
+                items.RuleFor(item => item.UnitPrice)
+                     .GreaterThan(0).WithMessage("Unit price must be greater than 0.");
+
                 items.RuleFor(item => item.Quantity)
                     .LessThanOrEqualTo(20).WithMessage("Cannot sell more than 20 items of the same product.");
 
@@ -26,7 +32,12 @@ namespace Ambev.DeveloperEvaluation.Domain.Validation
                 .MaximumLength(50).WithMessage("Sale number cannot exceed 50 characters.");
 
             RuleFor(sale => sale.SaleDate)
-                .NotEmpty().WithMessage("Sale date is required.");
+             .NotEmpty().WithMessage("Sale date is required.")
+             .Must(date => date.Date == DateTime.UtcNow.Date).WithMessage("Sale date must be the current date.");
+
+            RuleFor(sale => sale.Items.Sum(item => item.Quantity))
+             .GreaterThanOrEqualTo(1)
+             .WithMessage("A sale must have at least one item.");
 
             RuleFor(sale => sale.Customer)
                 .NotEmpty().WithMessage("Customer name is required.")

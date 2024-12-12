@@ -21,6 +21,12 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale
 
         public async Task<GetSaleResult> Handle(GetSaleCommand query, CancellationToken cancellationToken)
         {
+
+            if (query.Id == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(query.Id), "Sale ID cannot be null or empty.");
+            }
+
             _logger.LogInformation("Fetching Sale with ID: {SaleId}", query.Id);
 
             var sale = await _saleRepository.GetByIdAsync(query.Id);

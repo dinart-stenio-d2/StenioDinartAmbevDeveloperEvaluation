@@ -6,6 +6,18 @@ namespace Ambev.DeveloperEvaluation.Domain.Validation
 {
     public class SaleValidator : AbstractValidator<Sale>
     {
+
+        public static class SaleValidationExtensions
+        {
+            public static bool BeWithinValidDateRange(DateTime saleDate)
+            {
+                var today = DateTime.UtcNow.Date;
+                var pastLimit = today.AddDays(-30);
+                var futureLimit = today.AddDays(7);
+
+                return saleDate.Date >= pastLimit && saleDate.Date <= futureLimit;
+            }
+        }
         public SaleValidator()
         {
             RuleForEach(sale => sale.Items).ChildRules(items =>
@@ -31,9 +43,12 @@ namespace Ambev.DeveloperEvaluation.Domain.Validation
                 .NotEmpty().WithMessage("Sale number is required.")
                 .MaximumLength(50).WithMessage("Sale number cannot exceed 50 characters.");
 
-            RuleFor(sale => sale.SaleDate)
-             .NotEmpty().WithMessage("Sale date is required.")
-             .Must(date => date.Date == DateTime.UtcNow.Date).WithMessage("Sale date must be the current date.");
+   
+                RuleFor(sale => sale.SaleDate)
+                    .NotEmpty().WithMessage("Sale date is required.")
+                    .Must(SaleValidationExtensions.BeWithinValidDateRange)
+                    .WithMessage("Sale date must be within the last 30 days and no more than 7 days in the future.");
+            
 
             RuleFor(sale => sale.Items.Sum(item => item.Quantity))
              .GreaterThanOrEqualTo(1)
